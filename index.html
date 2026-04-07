@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creator Hub</title>
+  <meta name="description" content="Aesthetic one-page social hub with Telegram and Fanvue links." />
+  <style>
+    :root {
+      --bg: #09070c;
+      --bg-2: #120d19;
+      --card: rgba(255,255,255,0.08);
+      --card-2: rgba(255,255,255,0.05);
+      --text: #f5edf8;
+      --muted: #c3b5ce;
+      --line: rgba(255,255,255,0.11);
+      --accent: #ff6fd8;
+      --accent-2: #7f5cff;
+      --shadow: 0 24px 60px rgba(0,0,0,.45);
+      --radius: 28px;
+      --radius-sm: 18px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(255,111,216,.16), transparent 28%),
+        radial-gradient(circle at 80% 0%, rgba(127,92,255,.16), transparent 24%),
+        linear-gradient(180deg, #0a0710 0%, #0b0811 45%, #08060b 100%);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; height: auto; }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .035;
+      background-image:
+        radial-gradient(circle at 20% 20%, #fff 0 1px, transparent 1.2px),
+        radial-gradient(circle at 70% 40%, #fff 0 1px, transparent 1.2px),
+        radial-gradient(circle at 45% 80%, #fff 0 1px, transparent 1.2px),
+        radial-gradient(circle at 80% 70%, #fff 0 1px, transparent 1.2px);
+      background-size: 210px 210px;
+    }
+
+    .container {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: rgba(7, 5, 9, .52);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-badge {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(255,111,216,.28), rgba(127,92,255,.28));
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .brand-copy { min-width: 0; }
+    .brand-copy strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .brand-copy span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      line-height: 1;
+      transition: .25s ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.18);
+      background: rgba(255,255,255,.07);
+    }
+
+    .hero {
+      padding: 46px 0 30px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .card {
+      position: relative;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-copy {
+      padding: 42px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(255,111,216,.12), transparent 36%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffd4f3;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,111,216,.95), rgba(255,111,216,0));
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 6vw, 74px);
+      line-height: .96;
+      letter-spacing: -.04em;
+      max-width: 9ch;
+    }
+
+    .subtitle {
+      max-width: 56ch;
+      margin: 20px 0 0;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .tags {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tag {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(255,255,255,.045);
+      font-size: 14px;
+      color: #f3dff8;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 22px;
+      border-radius: 18px;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 1;
+      transition: .28s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      color: #160b1c;
+      background: linear-gradient(135deg, #ffd7f3, #ff6fd8 60%, #b88cff);
+      box-shadow: 0 12px 30px rgba(255,111,216,.24);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      background: rgba(255,255,255,.05);
+      border-color: var(--line);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.03);
+    }
+
+    .stats {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .hero-photo {
+      min-height: 660px;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    }
+
+    .hero-photo img {
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .floating-note {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(9,7,12,.68);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(16px);
+      max-width: 220px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+    }
+
+    .floating-note strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .floating-note span {
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .section {
+      padding: 18px 0 30px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 40px);
+      letter-spacing: -.03em;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 52ch;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .gallery-card {
+      overflow: hidden;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+    }
+
+    .gallery-card img {
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+    }
+
+    .gallery-caption {
+      padding: 14px 14px 16px;
+    }
+
+    .gallery-caption strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .gallery-caption span {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .info-card {
+      padding: 28px;
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .info-card h3 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      letter-spacing: -.02em;
+    }
+
+    .info-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      color: #efe2f5;
+    }
+
+    .check-item i {
+      flex: 0 0 auto;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      margin-top: 1px;
+      background: linear-gradient(135deg, rgba(255,111,216,.92), rgba(127,92,255,.92));
+      position: relative;
+      box-shadow: 0 10px 18px rgba(255,111,216,.22);
+    }
+
+    .check-item i::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: white;
+    }
+
+    .footer-cta {
+      margin: 16px 0 38px;
+      padding: 34px;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: center;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(255,111,216,.18), transparent 22%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .footer-cta h2 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .footer-cta p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 55ch;
+    }
+
+    .footer-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .note {
+      margin: 0 0 48px;
+      color: #a89ab3;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1040px) {
+      .hero-grid,
+      .footer-cta,
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .footer-buttons {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero {
+        padding-top: 26px;
+      }
+
+      .hero-copy {
+        padding: 26px;
+      }
+
+      .hero-photo {
+        min-height: 420px;
+      }
+
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <script>
+    const profile = {
+      name: "Lina Vale",
+      handle: "@linavale",
+      bio: "Soft glam, late-night city aesthetic, confident energy, polished visuals, and a clean premium vibe. This page is a simple social hub that makes it obvious what kind of creator she is at first glance.",
+      telegram_url: "https://t.me/your_username",
+      fanvue_url: "https://fanvue.com/your_username",
+      hero_image: "assets/profile.svg",
+      gallery: [
+        {
+          title: "Soft glam mood",
+          text: "Clean beauty styling, polished makeup, premium visual identity.",
+          image: "assets/gallery1.svg"
+        },
+        {
+          title: "Confident energy",
+          text: "Direct look, bold presence, minimal and expensive-feeling layout.",
+          image: "assets/gallery2.svg"
+        },
+        {
+          title: "Night city vibe",
+          text: "Dark glossy aesthetic with pink-purple lighting and contrast.",
+          image: "assets/gallery3.svg"
+        },
+        {
+          title: "Personal brand",
+          text: "A clear creator image that pushes visitors toward her socials.",
+          image: "assets/gallery4.svg"
+        }
+      ],
+      tags: ["premium vibe", "soft glam", "city nights", "creator page", "telegram", "fanvue"]
+    };
+  </script>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">LV</div>
+        <div class="brand-copy">
+          <strong id="brandName">Lina Vale</strong>
+          <span id="brandHandle">@linavale</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a class="chip" id="navTelegram" href="#" target="_blank" rel="noopener noreferrer">Telegram</a>
+        <a class="chip" id="navFanvue" href="#" target="_blank" rel="noopener noreferrer">Fanvue</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="card hero-copy">
+          <div class="eyebrow">Creator social hub</div>
+          <h1 id="heroTitle">Lina Vale</h1>
+          <p class="subtitle" id="heroBio"></p>
+
+          <div class="tags" id="tagList"></div>
+
+          <div class="cta-row">
+            <a class="btn btn-primary" id="heroTelegram" href="#" target="_blank" rel="noopener noreferrer">Open Telegram</a>
+            <a class="btn btn-secondary" id="heroFanvue" href="#" target="_blank" rel="noopener noreferrer">Open Fanvue</a>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <strong>01</strong>
+              <span>One clear landing page instead of scattered social links.</span>
+            </div>
+            <div class="stat">
+              <strong>02</strong>
+              <span>Visual style immediately signals what kind of creator she is.</span>
+            </div>
+            <div class="stat">
+              <strong>03</strong>
+              <span>Two direct buttons drive traffic exactly where it should go.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card hero-photo">
+          <img id="heroImage" src="assets/profile.svg" alt="Creator portrait" />
+          <div class="floating-note">
+            <strong>Premium visual identity</strong>
+            <span>Replace the placeholder art with her real photos and the page becomes a clean conversion-focused link hub.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Visual moodboard</h2>
+          </div>
+          <p>This block is there so a visitor instantly reads the creator’s vibe before clicking. Right now it uses built-in placeholder artwork, so the structure is ready even without uploaded photos.</p>
+        </div>
+
+        <div class="gallery" id="galleryGrid"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container info-grid">
+        <div class="info-card">
+          <h3>What this page does</h3>
+          <p>It functions as a minimal static landing page for one creator. The layout is intentionally direct: identity first, mood second, actions third. The main goal is to move traffic into Telegram and Fanvue without visual clutter.</p>
+          <div class="check-list">
+            <div class="check-item"><i></i><span>Strong first-screen branding</span></div>
+            <div class="check-item"><i></i><span>Two high-visibility social buttons</span></div>
+            <div class="check-item"><i></i><span>Works as a single-file static site</span></div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <h3>What to personalize</h3>
+          <p>Open the file and edit the <strong>profile</strong> object at the top: name, handle, Telegram link, Fanvue link, bio, and image paths. Once you replace the built-in art with real photos, the page will clearly show exactly who the girl is.</p>
+          <div class="check-list">
+            <div class="check-item"><i></i><span>Swap in 1 hero photo</span></div>
+            <div class="check-item"><i></i><span>Swap in 4 gallery photos</span></div>
+            <div class="check-item"><i></i><span>Update 2 URLs</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container footer-cta">
+        <div>
+          <h2>Choose where to go</h2>
+          <p>A visitor should not have to search. This last section repeats the two destination links so the page stays conversion-focused from top to bottom.</p>
+        </div>
+        <div class="footer-buttons">
+          <a class="btn btn-primary" id="footerTelegram" href="#" target="_blank" rel="noopener noreferrer">Telegram</a>
+          <a class="btn btn-secondary" id="footerFanvue" href="#" target="_blank" rel="noopener noreferrer">Fanvue</a>
+        </div>
+      </div>
+      <div class="container">
+        <p class="note">Built as a fully static page. No frameworks, no external dependencies, no backend. Just open <strong>index.html</strong> in a browser or upload the whole folder to any static hosting service.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const byId = (id) => document.getElementById(id);
+
+    byId("brandName").textContent = profile.name;
+    byId("brandHandle").textContent = profile.handle;
+    byId("heroTitle").textContent = profile.name;
+    byId("heroBio").textContent = profile.bio;
+    byId("heroImage").src = profile.hero_image;
+
+    [
+      "navTelegram",
+      "heroTelegram",
+      "footerTelegram"
+    ].forEach(id => byId(id).href = profile.telegram_url);
+
+    [
+      "navFanvue",
+      "heroFanvue",
+      "footerFanvue"
+    ].forEach(id => byId(id).href = profile.fanvue_url);
+
+    const tagList = byId("tagList");
+    profile.tags.forEach(tag => {
+      const node = document.createElement("span");
+      node.className = "tag";
+      node.textContent = tag;
+      tagList.appendChild(node);
+    });
+
+    const galleryGrid = byId("galleryGrid");
+    profile.gallery.forEach(item => {
+      const article = document.createElement("article");
+      article.className = "gallery-card";
+      article.innerHTML = `
+        <img src="${item.image}" alt="${item.title}" />
+        <div class="gallery-caption">
+          <strong>${item.title}</strong>
+          <span>${item.text}</span>
+        </div>
+      `;
+      galleryGrid.appendChild(article);
+    });
+  </script>
+</body>
+</html>
