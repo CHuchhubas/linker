@@ -1,732 +1,361 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Creator Hub</title>
-  <meta name="description" content="Aesthetic one-page social hub with Telegram and Fanvue links." />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beyond Instagram | Liora Yue</title>
+  <meta name="description" content="Fanvue + Telegram">
   <style>
     :root {
-      --bg: #09070c;
-      --bg-2: #120d19;
-      --card: rgba(255,255,255,0.08);
-      --card-2: rgba(255,255,255,0.05);
-      --text: #f5edf8;
-      --muted: #c3b5ce;
-      --line: rgba(255,255,255,0.11);
-      --accent: #ff6fd8;
-      --accent-2: #7f5cff;
-      --shadow: 0 24px 60px rgba(0,0,0,.45);
-      --radius: 28px;
+      --text: #f3f5ff;
+      --muted: #cfd6ed;
+      --line: rgba(255, 255, 255, 0.18);
+      --glass: rgba(14, 16, 26, 0.42);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+      --radius: 30px;
       --radius-sm: 18px;
-      --max: 1180px;
+      --max: 980px;
     }
 
     * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
       color: var(--text);
-      background:
-        radial-gradient(circle at 15% 10%, rgba(255,111,216,.16), transparent 28%),
-        radial-gradient(circle at 80% 0%, rgba(127,92,255,.16), transparent 24%),
-        linear-gradient(180deg, #0a0710 0%, #0b0811 45%, #08060b 100%);
+      background: #070b16;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    a { color: inherit; text-decoration: none; }
-    img { display: block; width: 100%; height: auto; }
+    a {
+      color: inherit;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
 
-    .noise {
+    .bg {
       position: fixed;
       inset: 0;
+      background:
+        linear-gradient(180deg, rgba(5, 8, 16, 0.15) 0%, rgba(5, 8, 16, 0.6) 70%, rgba(5, 8, 16, 0.86) 100%),
+        url("src/background.png") center / cover no-repeat;
+      transform-origin: center;
+      transition: transform 0.25s ease-out;
+      z-index: -3;
+    }
+
+    .bg-blur {
+      position: fixed;
+      inset: 0;
+      backdrop-filter: blur(0px);
+      background: rgba(9, 12, 22, 0);
       pointer-events: none;
-      opacity: .035;
-      background-image:
-        radial-gradient(circle at 20% 20%, #fff 0 1px, transparent 1.2px),
-        radial-gradient(circle at 70% 40%, #fff 0 1px, transparent 1.2px),
-        radial-gradient(circle at 45% 80%, #fff 0 1px, transparent 1.2px),
-        radial-gradient(circle at 80% 70%, #fff 0 1px, transparent 1.2px);
-      background-size: 210px 210px;
-    }
-
-    .container {
-      width: min(calc(100% - 32px), var(--max));
-      margin: 0 auto;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(16px);
-      background: rgba(7, 5, 9, .52);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .topbar-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 14px 0;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .brand-badge {
-      width: 40px;
-      height: 40px;
-      display: grid;
-      place-items: center;
-      border-radius: 14px;
-      background: linear-gradient(135deg, rgba(255,111,216,.28), rgba(127,92,255,.28));
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
-      font-weight: 800;
-      letter-spacing: .08em;
-    }
-
-    .brand-copy { min-width: 0; }
-    .brand-copy strong {
-      display: block;
-      font-size: 14px;
-      line-height: 1.15;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .brand-copy span {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .chip {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      padding: 11px 14px;
-      border-radius: 999px;
-      font-size: 14px;
-      line-height: 1;
-      transition: .25s ease;
-    }
-
-    .chip:hover {
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,.18);
-      background: rgba(255,255,255,.07);
+      transition: backdrop-filter 0.25s ease-out, background 0.25s ease-out;
+      z-index: -2;
     }
 
     .hero {
-      padding: 46px 0 30px;
-    }
-
-    .hero-grid {
+      min-height: 100svh;
       display: grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 24px;
-      align-items: stretch;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
     }
 
-    .card {
-      position: relative;
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+    .hero-inner {
+      width: min(92vw, 760px);
+      display: grid;
+      gap: 16px;
+    }
+
+    .badge {
+      justify-self: center;
+      padding: 9px 16px;
+      border-radius: 999px;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .hero-copy {
-      padding: 42px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: 100%;
-      background:
-        radial-gradient(circle at 100% 0%, rgba(255,111,216,.12), transparent 36%),
-        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: #ffd4f3;
+      background: rgba(7, 10, 20, 0.3);
+      backdrop-filter: blur(8px);
       font-size: 13px;
-      font-weight: 700;
-      letter-spacing: .08em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 28px;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(255,111,216,.95), rgba(255,111,216,0));
+      color: #dfe6ff;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(38px, 6vw, 74px);
-      line-height: .96;
-      letter-spacing: -.04em;
-      max-width: 9ch;
+      font-size: clamp(38px, 8vw, 88px);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      text-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
     }
 
     .subtitle {
-      max-width: 56ch;
-      margin: 20px 0 0;
-      font-size: 18px;
-      line-height: 1.65;
+      margin: 0;
       color: var(--muted);
+      font-size: clamp(15px, 2.5vw, 19px);
+      line-height: 1.6;
+      text-wrap: balance;
     }
 
-    .tags {
-      margin-top: 24px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .tag {
-      padding: 10px 14px;
+    .scroll-link {
+      justify-self: center;
+      margin-top: 8px;
+      width: 52px;
+      height: 52px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.09);
-      background: rgba(255,255,255,.045);
-      font-size: 14px;
-      color: #f3dff8;
-    }
-
-    .cta-row {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 28px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 16px 22px;
-      border-radius: 18px;
-      font-weight: 700;
-      font-size: 16px;
-      line-height: 1;
-      transition: .28s ease;
-      border: 1px solid transparent;
-    }
-
-    .btn-primary {
-      color: #160b1c;
-      background: linear-gradient(135deg, #ffd7f3, #ff6fd8 60%, #b88cff);
-      box-shadow: 0 12px 30px rgba(255,111,216,.24);
-    }
-
-    .btn-secondary {
-      color: var(--text);
-      background: rgba(255,255,255,.05);
-      border-color: var(--line);
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.03);
-    }
-
-    .stats {
-      margin-top: 26px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .stat {
-      padding: 16px;
-      border-radius: 20px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.08);
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 22px;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .stat span {
-      display: block;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .hero-photo {
-      min-height: 660px;
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-    }
-
-    .hero-photo img {
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .floating-note {
-      position: absolute;
-      right: 18px;
-      bottom: 18px;
-      padding: 14px 16px;
-      border-radius: 18px;
-      background: rgba(9,7,12,.68);
-      border: 1px solid rgba(255,255,255,.10);
-      backdrop-filter: blur(16px);
-      max-width: 220px;
-      box-shadow: 0 18px 40px rgba(0,0,0,.35);
-    }
-
-    .floating-note strong {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-
-    .floating-note span {
-      font-size: 13px;
-      line-height: 1.45;
-      color: var(--muted);
-    }
-
-    .section {
-      padding: 18px 0 30px;
-    }
-
-    .section-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(28px, 4vw, 40px);
-      letter-spacing: -.03em;
-    }
-
-    .section-head p {
-      margin: 0;
-      max-width: 52ch;
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .gallery-card {
-      overflow: hidden;
-      border-radius: 24px;
       border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      box-shadow: var(--shadow);
-    }
-
-    .gallery-card img {
-      aspect-ratio: 4 / 5;
-      object-fit: cover;
-    }
-
-    .gallery-caption {
-      padding: 14px 14px 16px;
-    }
-
-    .gallery-caption strong {
-      display: block;
-      font-size: 15px;
-      margin-bottom: 6px;
-    }
-
-    .gallery-caption span {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .info-grid {
+      background: rgba(7, 10, 20, 0.36);
+      backdrop-filter: blur(8px);
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-top: 10px;
+      place-items: center;
+      transition: transform 0.22s ease, background 0.22s ease;
+      animation: float 2.4s ease-in-out infinite;
     }
 
-    .info-card {
-      padding: 28px;
-      border-radius: 26px;
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
+    .scroll-link:hover {
+      transform: translateY(2px);
+      background: rgba(255, 255, 255, 0.15);
     }
 
-    .info-card h3 {
-      margin: 0 0 12px;
-      font-size: 22px;
-      letter-spacing: -.02em;
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
     }
 
-    .info-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.75;
-    }
-
-    .check-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .check-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      color: #efe2f5;
-    }
-
-    .check-item i {
-      flex: 0 0 auto;
-      width: 22px;
-      height: 22px;
-      border-radius: 999px;
-      margin-top: 1px;
-      background: linear-gradient(135deg, rgba(255,111,216,.92), rgba(127,92,255,.92));
+    .links {
       position: relative;
-      box-shadow: 0 10px 18px rgba(255,111,216,.22);
+      padding: 0 16px 60px;
+      margin-top: -60px;
     }
 
-    .check-item i::after {
+    .panel {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      background: var(--glass);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px) saturate(135%);
+      -webkit-backdrop-filter: blur(24px) saturate(135%);
+      padding: clamp(20px, 3.4vw, 38px);
+    }
+
+    .panel-head {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: clamp(24px, 4vw, 42px);
+      letter-spacing: -0.02em;
+    }
+
+    .panel-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 58ch;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .social-btn {
+      --glow-a: rgba(255, 140, 210, 0.22);
+      --glow-b: rgba(160, 120, 255, 0.14);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.08);
+      transition: transform 0.2s ease, background 0.2s ease;
+      animation: btn-glow 5.5s ease-in-out infinite;
+    }
+
+    .social-btn:nth-child(2) {
+      --glow-a: rgba(120, 185, 255, 0.24);
+      --glow-b: rgba(100, 220, 255, 0.12);
+    }
+
+    .social-btn::after {
       content: "";
       position: absolute;
       inset: 0;
-      margin: auto;
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: white;
+      border-radius: inherit;
+      background: linear-gradient(
+        105deg,
+        transparent 36%,
+        rgba(255, 255, 255, 0.07) 48%,
+        transparent 60%
+      );
+      background-size: 220% 100%;
+      animation: btn-shimmer 9s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .footer-cta {
-      margin: 16px 0 38px;
-      padding: 34px;
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 18px;
-      align-items: center;
-      border-radius: 30px;
-      background:
-        radial-gradient(circle at 85% 20%, rgba(255,111,216,.18), transparent 22%),
-        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
+    .social-btn > * {
+      position: relative;
+      z-index: 1;
     }
 
-    .footer-cta h2 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 4vw, 46px);
-      line-height: 1;
-      letter-spacing: -.04em;
+    .social-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.16);
     }
 
-    .footer-cta p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.75;
-      max-width: 55ch;
+    @keyframes btn-glow {
+      0%, 100% {
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.06),
+          0 0 14px var(--glow-a),
+          0 0 32px transparent;
+        border-color: rgba(255, 255, 255, 0.16);
+      }
+      50% {
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.1),
+          0 0 22px var(--glow-a),
+          0 0 44px var(--glow-b);
+        border-color: rgba(255, 255, 255, 0.26);
+      }
     }
 
-    .footer-buttons {
-      display: flex;
-      gap: 14px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
+    @keyframes btn-shimmer {
+      0%, 100% { background-position: 130% 0; }
+      50% { background-position: -30% 0; }
     }
 
-    .note {
-      margin: 0 0 48px;
-      color: #a89ab3;
+    @media (prefers-reduced-motion: reduce) {
+      .social-btn {
+        animation: none;
+        box-shadow: 0 0 16px var(--glow-a);
+      }
+      .social-btn::after {
+        animation: none;
+        opacity: 0;
+      }
+    }
+
+    .social-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      object-fit: cover;
+      flex: 0 0 auto;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      padding: 5px;
+    }
+
+    .social-copy strong {
+      display: block;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .social-copy span {
+      display: block;
+      color: #d4dcf4;
       font-size: 13px;
-      line-height: 1.7;
-    }
-
-    @media (max-width: 1040px) {
-      .hero-grid,
-      .footer-cta,
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .gallery {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .footer-buttons {
-        justify-content: flex-start;
-      }
+      margin-top: 4px;
     }
 
     @media (max-width: 720px) {
-      .hero {
-        padding-top: 26px;
-      }
-
-      .hero-copy {
-        padding: 26px;
-      }
-
-      .hero-photo {
-        min-height: 420px;
-      }
-
-      .gallery {
-        grid-template-columns: 1fr;
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar-inner {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav-actions {
-        width: 100%;
-        justify-content: flex-start;
-      }
-
-      .section-head {
-        align-items: flex-start;
-        flex-direction: column;
-      }
+      .links { margin-top: -38px; }
+      .buttons { grid-template-columns: 1fr; }
+      .social-btn { padding: 13px 14px; }
+      .panel { border-radius: 22px; }
     }
   </style>
 </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MNM5EE797D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MNM5EE797D');
+</script>
 <body>
-  <div class="noise"></div>
-
-  <script>
-    const profile = {
-      name: "Lina Vale",
-      handle: "@linavale",
-      bio: "Soft glam, late-night city aesthetic, confident energy, polished visuals, and a clean premium vibe. This page is a simple social hub that makes it obvious what kind of creator she is at first glance.",
-      telegram_url: "https://t.me/your_username",
-      fanvue_url: "https://fanvue.com/your_username",
-      hero_image: "assets/profile.svg",
-      gallery: [
-        {
-          title: "Soft glam mood",
-          text: "Clean beauty styling, polished makeup, premium visual identity.",
-          image: "assets/gallery1.svg"
-        },
-        {
-          title: "Confident energy",
-          text: "Direct look, bold presence, minimal and expensive-feeling layout.",
-          image: "assets/gallery2.svg"
-        },
-        {
-          title: "Night city vibe",
-          text: "Dark glossy aesthetic with pink-purple lighting and contrast.",
-          image: "assets/gallery3.svg"
-        },
-        {
-          title: "Personal brand",
-          text: "A clear creator image that pushes visitors toward her socials.",
-          image: "assets/gallery4.svg"
-        }
-      ],
-      tags: ["premium vibe", "soft glam", "city nights", "creator page", "telegram", "fanvue"]
-    };
-  </script>
-
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <div class="brand">
-        <div class="brand-badge">LV</div>
-        <div class="brand-copy">
-          <strong id="brandName">Lina Vale</strong>
-          <span id="brandHandle">@linavale</span>
-        </div>
-      </div>
-      <div class="nav-actions">
-        <a class="chip" id="navTelegram" href="#" target="_blank" rel="noopener noreferrer">Telegram</a>
-        <a class="chip" id="navFanvue" href="#" target="_blank" rel="noopener noreferrer">Fanvue</a>
-      </div>
-    </div>
-  </header>
+  <div class="bg" id="bg"></div>
+  <div class="bg-blur" id="bgBlur"></div>
 
   <main>
     <section class="hero">
-      <div class="container hero-grid">
-        <div class="card hero-copy">
-          <div class="eyebrow">Creator social hub</div>
-          <h1 id="heroTitle">Lina Vale</h1>
-          <p class="subtitle" id="heroBio"></p>
-
-          <div class="tags" id="tagList"></div>
-
-          <div class="cta-row">
-            <a class="btn btn-primary" id="heroTelegram" href="#" target="_blank" rel="noopener noreferrer">Open Telegram</a>
-            <a class="btn btn-secondary" id="heroFanvue" href="#" target="_blank" rel="noopener noreferrer">Open Fanvue</a>
-          </div>
-
-          <div class="stats">
-            <div class="stat">
-              <strong>01</strong>
-              <span>One clear landing page instead of scattered social links.</span>
-            </div>
-            <div class="stat">
-              <strong>02</strong>
-              <span>Visual style immediately signals what kind of creator she is.</span>
-            </div>
-            <div class="stat">
-              <strong>03</strong>
-              <span>Two direct buttons drive traffic exactly where it should go.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card hero-photo">
-          <img id="heroImage" src="assets/profile.svg" alt="Creator portrait" />
-          <div class="floating-note">
-            <strong>Premium visual identity</strong>
-            <span>Replace the placeholder art with her real photos and the page becomes a clean conversion-focused link hub.</span>
-          </div>
-        </div>
+      <div class="hero-inner">
+        <div class="badge">FROM INSTAGRAM TO HERE</div>
+        <h1>Closer. Hotter.<br>More personal.</h1>
+        <p class="subtitle">Exclusive content and direct chat with me —
+            choose where you want to join.</p>
+        <a class="scroll-link" href="#links" aria-label="Перейти к ссылкам">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" aria-hidden="true">
+            <path d="M6 9L12 15L18 9" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
       </div>
     </section>
 
-    <section class="section">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <h2>Visual moodboard</h2>
-          </div>
-          <p>This block is there so a visitor instantly reads the creator’s vibe before clicking. Right now it uses built-in placeholder artwork, so the structure is ready even without uploaded photos.</p>
+    <section class="links" id="links">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Where do you want me?</h2>
+          <p>Both links give you private content and real conversation with me. Tap the one you want right now.</p>
         </div>
 
-        <div class="gallery" id="galleryGrid"></div>
-      </div>
-    </section>
+        <div class="buttons">
+          <a class="social-btn" href="https://www.fanvue.com/lliorayue" target="_blank" rel="noopener noreferrer">
+            <img class="social-icon" src="src/fun_logo.png" alt="">
+            <span class="social-copy">
+              <strong>Fanvue</strong>
+              <span>Exclusive content & personal chat</span>
+            </span>
+          </a>
 
-    <section class="section">
-      <div class="container info-grid">
-        <div class="info-card">
-          <h3>What this page does</h3>
-          <p>It functions as a minimal static landing page for one creator. The layout is intentionally direct: identity first, mood second, actions third. The main goal is to move traffic into Telegram and Fanvue without visual clutter.</p>
-          <div class="check-list">
-            <div class="check-item"><i></i><span>Strong first-screen branding</span></div>
-            <div class="check-item"><i></i><span>Two high-visibility social buttons</span></div>
-            <div class="check-item"><i></i><span>Works as a single-file static site</span></div>
-          </div>
+          <a class="social-btn" href="https://t.me/liorayue" target="_blank" rel="noopener noreferrer">
+            <img class="social-icon" src="src/telegram_logo.png" alt="">
+            <span class="social-copy">
+              <strong>Telegram</strong>
+              <span>Private content & direct chat</span>
+            </span>
+          </a>
         </div>
-
-        <div class="info-card">
-          <h3>What to personalize</h3>
-          <p>Open the file and edit the <strong>profile</strong> object at the top: name, handle, Telegram link, Fanvue link, bio, and image paths. Once you replace the built-in art with real photos, the page will clearly show exactly who the girl is.</p>
-          <div class="check-list">
-            <div class="check-item"><i></i><span>Swap in 1 hero photo</span></div>
-            <div class="check-item"><i></i><span>Swap in 4 gallery photos</span></div>
-            <div class="check-item"><i></i><span>Update 2 URLs</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container footer-cta">
-        <div>
-          <h2>Choose where to go</h2>
-          <p>A visitor should not have to search. This last section repeats the two destination links so the page stays conversion-focused from top to bottom.</p>
-        </div>
-        <div class="footer-buttons">
-          <a class="btn btn-primary" id="footerTelegram" href="#" target="_blank" rel="noopener noreferrer">Telegram</a>
-          <a class="btn btn-secondary" id="footerFanvue" href="#" target="_blank" rel="noopener noreferrer">Fanvue</a>
-        </div>
-      </div>
-      <div class="container">
-        <p class="note">Built as a fully static page. No frameworks, no external dependencies, no backend. Just open <strong>index.html</strong> in a browser or upload the whole folder to any static hosting service.</p>
       </div>
     </section>
   </main>
 
   <script>
-    const byId = (id) => document.getElementById(id);
+    const bg = document.getElementById("bg");
+    const bgBlur = document.getElementById("bgBlur");
 
-    byId("brandName").textContent = profile.name;
-    byId("brandHandle").textContent = profile.handle;
-    byId("heroTitle").textContent = profile.name;
-    byId("heroBio").textContent = profile.bio;
-    byId("heroImage").src = profile.hero_image;
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
-    [
-      "navTelegram",
-      "heroTelegram",
-      "footerTelegram"
-    ].forEach(id => byId(id).href = profile.telegram_url);
+    const animateBackground = () => {
+      const top = window.scrollY || 0;
+      const blur = clamp(top / 45, 0, 20);
+      const dim = clamp(top / 1500, 0, 0.36);
+      const scale = 1 + clamp(top / 7000, 0, 0.045);
 
-    [
-      "navFanvue",
-      "heroFanvue",
-      "footerFanvue"
-    ].forEach(id => byId(id).href = profile.fanvue_url);
+      bg.style.transform = `scale(${scale})`;
+      bgBlur.style.backdropFilter = `blur(${blur}px)`;
+      bgBlur.style.background = `rgba(9, 12, 22, ${dim})`;
+    };
 
-    const tagList = byId("tagList");
-    profile.tags.forEach(tag => {
-      const node = document.createElement("span");
-      node.className = "tag";
-      node.textContent = tag;
-      tagList.appendChild(node);
-    });
-
-    const galleryGrid = byId("galleryGrid");
-    profile.gallery.forEach(item => {
-      const article = document.createElement("article");
-      article.className = "gallery-card";
-      article.innerHTML = `
-        <img src="${item.image}" alt="${item.title}" />
-        <div class="gallery-caption">
-          <strong>${item.title}</strong>
-          <span>${item.text}</span>
-        </div>
-      `;
-      galleryGrid.appendChild(article);
-    });
+    animateBackground();
+    window.addEventListener("scroll", animateBackground, { passive: true });
   </script>
 </body>
 </html>
